@@ -1,0 +1,40 @@
+---
+- name: Migration de serveurs Windows 2003 vers Windows Server 2022
+  hosts: windows2003servers
+  gather_facts: no
+  tasks:
+    - name: Vérification de la connectivité
+      win_ping:
+
+    - name: Copie du fichier d'installation de Windows Server 2022
+      win_copy:
+        src: /path/to/WindowsServer2022.iso
+        dest: C:\Temp\WindowsServer2022.iso
+
+    - name: Montage de l'ISO d'installation
+      win_shell: |
+        Mount-DiskImage -ImagePath "C:\Temp\WindowsServer2022.iso"
+      async: 600
+      poll: 0
+
+    - name: Installation de Windows Server 2022
+      win_shell: |
+        Start-Process -Wait -FilePath "D:\setup.exe" -ArgumentList "/Auto:Upgrade /Quiet /NoReboot"
+      async: 600
+      poll: 0
+      register: install_result
+      changed_when: false
+
+    - name: Démontage de l'ISO d'installation
+      win_shell: |
+        Dismount-DiskImage -ImagePath "C:\Temp\WindowsServer2022.iso"
+      async: 600
+      poll: 0
+
+    - name: Redémarrage du serveur
+      win_reboot:
+      when: install_result.rc == 0
+
+    - name: Attendre que le serveur redémarre
+      wait_for_connection:
+        timeout: 600

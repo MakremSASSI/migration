@@ -1,0 +1,47 @@
+La migration d'IBM WebSphere Application Server (WAS) de la version 7.0.0 d'un serveur Windows 2003 vers un serveur Windows Server 2019 nécessite plusieurs étapes, y compris la sauvegarde des configurations et des données, l'installation de WAS 8.5.5 sur le nouveau serveur, la migration de la configuration, et enfin la migration des applications. Voici les commandes pour effectuer ces étapes :
+
+**Étape 1 : Préparation sur le serveur Windows 2003**
+
+1.1. Sauvegardez votre configuration WAS 7.0.0, vos applications et vos données :
+   
+```bash
+# Créez une sauvegarde complète
+BackupConfig.bat <répertoire de sauvegarde>
+```
+
+**Étape 2 : Installation de WebSphere Application Server 8.5.5 sur Windows Server 2019**
+
+2.1. Téléchargez et installez WebSphere Application Server 8.5.5 sur le nouveau serveur Windows Server 2019 en suivant les instructions fournies par IBM.
+
+**Étape 3 : Migration de la configuration**
+
+3.1. Copiez la sauvegarde de la configuration WAS 7.0.0 du serveur Windows 2003 vers le serveur Windows Server 2019, puis utilisez l'outil de migration fourni par WebSphere pour migrer la configuration de la version 7.0.0 vers la version 8.5.5. Vous pouvez utiliser la commande suivante :
+
+```bash
+# Exécutez l'outil de migration
+MigrationManager.bat -source <chemin_vers_WAS_7.0.0> -target <chemin_vers_WAS_8.5.5> -all
+```
+
+**Étape 4 : Vérification de la configuration migrée**
+
+4.1. Vérifiez la configuration migrée pour vous assurer qu'elle est correcte et qu'elle répond à vos besoins. Utilisez les outils d'administration WebSphere pour inspecter et ajuster la configuration si nécessaire.
+
+**Étape 5 : Migration des applications**
+
+5.1. Identifiez les applications qui doivent être migrées. Assurez-vous qu'elles sont compatibles avec WebSphere 8.5.5.
+
+5.2. Utilisez les outils d'administration de WebSphere pour déployer les applications sur le nouveau serveur Windows Server 2019. Vous pouvez le faire via l'interface graphique ou en utilisant des scripts Jython.
+
+**Étape 6 : Tests et validation**
+
+6.1. Effectuez des tests approfondis pour vous assurer que toutes les applications fonctionnent correctement sur WebSphere 8.5.5.
+
+**Étape 7 : Passage en production**
+
+7.1. Planifiez le passage en production en minimisant les perturbations pour les utilisateurs.
+
+7.2. Configurez les équilibrages de charge, les moniteurs de ressources, etc., selon vos besoins.
+
+7.3. Mettez en place une surveillance active pour détecter et résoudre tout problème rapidement.
+
+Assurez-vous de consulter la documentation spécifique à votre version de WebSphere et aux versions de Windows pour obtenir des instructions détaillées, car les détails peuvent varier en fonction des versions exactes que vous utilisez. En outre, prenez toutes les précautions nécessaires, y compris des sauvegardes régulières, pour minimiser les risques lors de la migration.

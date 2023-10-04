@@ -1,0 +1,47 @@
+La migration d'IBM WebSphere Application Server (WAS) de la version 7.0.0 vers une version plus récente, comme 8.5.5, nécessite une série d'étapes et de commandes spécifiques. Voici un aperçu des principales étapes et des commandes que vous pouvez utiliser lors de la migration. Notez que les noms des fichiers et des répertoires peuvent varier en fonction de votre installation spécifique de WebSphere, vous devrez donc les adapter en conséquence.
+
+**Étape 1 : Préparation**
+
+1.1. Sauvegardez votre configuration WAS 7.0.0, vos applications et vos données :
+
+```bash
+# Créez une sauvegarde complète
+BackupConfig.sh <répertoire de sauvegarde>
+```
+
+**Étape 2 : Installation de WebSphere Application Server 8.5.5**
+
+2.1. Téléchargez et installez WebSphere Application Server 8.5.5 en suivant les instructions fournies par IBM.
+
+**Étape 3 : Migration de la configuration**
+
+3.1. Utilisez l'outil de migration fourni par WebSphere pour migrer la configuration de la version 7.0.0 vers la version 8.5.5. Vous pouvez utiliser la commande suivante :
+
+```bash
+# Exécutez l'outil de migration
+MigrationManager.sh -source <chemin_vers_WAS_7.0.0> -target <chemin_vers_WAS_8.5.5> -all
+```
+
+**Étape 4 : Vérification de la configuration migrée**
+
+4.1. Vérifiez la configuration migrée pour vous assurer qu'elle est correcte et qu'elle répond à vos besoins. Utilisez les outils d'administration WebSphere pour inspecter et ajuster la configuration si nécessaire.
+
+**Étape 5 : Migration des applications**
+
+5.1. Identifiez les applications qui doivent être migrées. Assurez-vous qu'elles sont compatibles avec WebSphere 8.5.5.
+
+5.2. Utilisez les outils d'administration de WebSphere pour déployer les applications sur le nouveau serveur. Vous pouvez le faire via l'interface graphique ou en utilisant des scripts Jython.
+
+**Étape 6 : Tests et validation**
+
+6.1. Effectuez des tests approfondis pour vous assurer que toutes les applications fonctionnent correctement sur WebSphere 8.5.5.
+
+**Étape 7 : Passage en production**
+
+7.1. Planifiez le passage en production en minimisant les perturbations pour les utilisateurs.
+
+7.2. Configurez les équilibrages de charge, les moniteurs de ressources, etc., selon vos besoins.
+
+7.3. Mettez en place une surveillance active pour détecter et résoudre tout problème rapidement.
+
+Ces étapes et commandes sont générales, et il est important de consulter la documentation spécifique à votre version de WebSphere pour des instructions détaillées. Assurez-vous également de prendre toutes les précautions nécessaires, y compris des sauvegardes régulières, pour minimiser les risques lors de la migration.

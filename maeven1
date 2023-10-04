@@ -1,0 +1,70 @@
+La migration d'un Nexus Repository Manager d'un serveur Ubuntu 14.04 vers un serveur Ubuntu 22.04 implique de déplacer les données, de configurer Nexus sur le nouveau serveur et de mettre à jour les configurations. Voici un guide général pour effectuer cette migration :
+
+**Étape 1 : Préparation sur le serveur Ubuntu 14.04**
+
+1.1. Sauvegarde des données : Assurez-vous de sauvegarder toutes les données de Nexus Repository Manager sur le serveur Ubuntu 14.04. Vous pouvez copier le répertoire de stockage de Nexus et sauvegarder la configuration.
+
+```bash
+# Sauvegarde du répertoire de stockage Nexus
+cp -r /chemin/vers/nexus-data /chemin/de/sauvegarde
+
+# Sauvegarde de la configuration Nexus
+cp -r /chemin/vers/nexus/config /chemin/de/sauvegarde
+```
+
+**Étape 2 : Préparation sur le serveur Ubuntu 22.04**
+
+2.1. Installez Java : Assurez-vous que Java est installé sur le serveur Ubuntu 22.04, car Nexus Repository Manager nécessite Java.
+
+```bash
+# Installation de Java (si nécessaire)
+sudo apt update
+sudo apt install openjdk-11-jdk
+```
+
+2.2. Téléchargez Nexus Repository Manager 3 : Téléchargez la dernière version de Nexus Repository Manager 3 depuis le site officiel de Sonatype (https://www.sonatype.com/download-oss-sonatype).
+
+**Étape 3 : Configuration sur le serveur Ubuntu 22.04**
+
+3.1. Décompressez l'archive Nexus Repository Manager 3 téléchargée et placez-la dans le répertoire d'installation souhaité.
+
+```bash
+# Exemple de décompression et de déplacement de l'archive Nexus
+tar -xvzf nexus-3.x.x-unix.tar.gz
+sudo mv nexus-3.x.x /opt/nexus
+```
+
+3.2. Configurez Nexus Repository Manager 3 pour utiliser le répertoire de données et la configuration sauvegardés précédemment. Éditez le fichier de configuration de Nexus :
+
+```bash
+sudo nano /opt/nexus/etc/nexus-default.properties
+```
+
+Modifiez les paramètres suivants pour pointer vers les données et la configuration sauvegardées :
+
+```properties
+nexus-data=/chemin/vers/sauvegarde/nexus-data
+nexus-config=/chemin/vers/sauvegarde/config
+```
+
+**Étape 4 : Démarrage de Nexus Repository Manager sur le serveur Ubuntu 22.04**
+
+4.1. Démarrez Nexus Repository Manager 3 en utilisant le script de démarrage :
+
+```bash
+sudo /opt/nexus/bin/nexus start
+```
+
+**Étape 5 : Vérification et tests**
+
+5.1. Assurez-vous que Nexus Repository Manager 3 démarre correctement en accédant à son interface web via un navigateur.
+
+5.2. Vérifiez que toutes les données et configurations ont été correctement migrées et que vos dépôts et artefacts sont accessibles.
+
+**Étape 6 : Passage en production**
+
+6.1. Configurez la sauvegarde régulière de votre instance Nexus Repository Manager 3 sur le nouveau serveur Ubuntu 22.04 pour éviter la perte de données.
+
+6.2. Mettez à jour les références et les configurations de vos projets et systèmes pour pointer vers le nouveau serveur Nexus.
+
+Assurez-vous de consulter la documentation de Nexus Repository Manager 3 pour des détails spécifiques et pour vous assurer que vous avez pris en compte toutes les configurations et personnalisations spécifiques à votre installation.

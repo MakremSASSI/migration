@@ -1,0 +1,30 @@
+Pour migrer un JDBC driver connecté avec IBM WebSphere Application Server, vous devrez suivre quelques étapes spécifiques. Voici un guide général pour vous aider à effectuer cette migration :
+
+1. **Identifier le JDBC Driver actuel** :
+   - Avant de commencer la migration, identifiez le JDBC Driver que vous utilisez actuellement dans votre application WebSphere. Vous aurez besoin de cette information pour configurer le nouveau driver.
+
+2. **Télécharger le nouveau JDBC Driver** :
+   - Recherchez et téléchargez la dernière version du JDBC Driver que vous souhaitez utiliser. Assurez-vous que cette version est compatible avec votre version d'IBM WebSphere Application Server.
+
+3. **Configurer le nouveau JDBC Driver** :
+   - Une fois le nouveau driver téléchargé, configurez-le dans WebSphere. Cela peut généralement être fait via l'interface d'administration WebSphere.
+
+4. **Déployer le nouveau JDBC Driver** :
+   - Assurez-vous que le nouveau driver est déployé correctement dans l'environnement WebSphere. Vous devrez peut-être redémarrer le serveur pour que les modifications prennent effet.
+
+5. **Modifier la source de données (DataSource)** :
+   - Si vous utilisez une source de données (DataSource) dans WebSphere, mettez à jour la configuration pour utiliser le nouveau JDBC Driver. Assurez-vous que tous les paramètres de connexion, tels que l'URL de la base de données, le nom d'utilisateur et le mot de passe, sont correctement configurés pour le nouveau driver.
+
+6. **Mettre à jour l'application** :
+   - Si votre application code directement des appels au JDBC Driver, assurez-vous de mettre à jour ces appels pour utiliser les classes et les méthodes appropriées du nouveau driver. Cela peut nécessiter des modifications de code.
+
+7. **Tester l'application** :
+   - Effectuez des tests approfondis de votre application pour vous assurer qu'elle fonctionne correctement avec le nouveau JDBC Driver.
+
+8. **Surveillance et optimisation** :
+   - Une fois la migration terminée, surveillez les performances de votre application et ajustez les paramètres au besoin pour optimiser les performances avec le nouveau driver.
+
+9. **Sauvegarde et documentation** :
+   - Assurez-vous de disposer d'une sauvegarde de votre configuration précédente au cas où vous auriez besoin de revenir en arrière. Documentez toutes les modifications apportées à la configuration de WebSphere pour faciliter la maintenance future.
+
+N'oubliez pas de consulter la documentation d'IBM WebSphere Application Server et du nouveau JDBC Driver pour des instructions spécifiques à votre version et à votre environnement. La migration des drivers JDBC peut être délicate, il est donc important de suivre attentivement les étapes et de tester soigneusement votre application pour éviter tout dysfonctionnement.

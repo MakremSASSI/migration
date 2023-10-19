@@ -1,0 +1,46 @@
+L'erreur "x509: certificate signed by unknown authority" indique que le certificat SSL utilisé par votre registre Docker n'est pas reconnu comme étant signé par une autorité de confiance sur le serveur distant. Pour résoudre ce problème sur un serveur Ubuntu, vous pouvez suivre ces étapes :
+
+1. Copiez le certificat du registre Docker sur le serveur distant :
+   
+   Assurez-vous que le certificat SSL que vous avez utilisé pour sécuriser votre registre Docker est disponible sur le serveur distant. Vous pouvez copier le certificat sur le serveur à l'aide de la commande `scp` ou tout autre moyen de transfert de fichiers sécurisé. Placez le certificat dans un répertoire dédié, par exemple `/etc/docker/certs.d/<votre_registre>`.
+
+2. Mettez à jour la liste des certificats de confiance de Docker :
+
+   Vous devez ajouter le certificat à la liste des certificats de confiance de Docker sur le serveur distant. Pour ce faire, vous pouvez créer un fichier de configuration Docker dans le répertoire `/etc/docker/` (s'il n'existe pas déjà) et y ajouter le certificat. Voici comment procéder :
+
+   a. Créez le fichier `/etc/docker/daemon.json` (si ce fichier n'existe pas) sur le serveur distant ou éditez-le si déjà présent. Vous pouvez utiliser un éditeur de texte tel que `nano` ou `vim` pour créer ou éditer le fichier :
+   
+   ```bash
+   sudo nano /etc/docker/daemon.json
+   ```
+
+   b. Dans le fichier `daemon.json`, ajoutez la configuration pour spécifier le chemin vers le certificat. Assurez-vous de remplacer `<votre_registre>` par le nom de domaine de votre registre Docker :
+
+   ```json
+   {
+       "insecure-registries": [],
+       "registry-mirrors": [],
+       "debug": true,
+       "experimental": false,
+       "tls": true,
+       "tlscacert": "/etc/docker/certs.d/<votre_registre>/ca.crt",
+       "tlscert": "/etc/docker/certs.d/<votre_registre>/cert.crt",
+       "tlskey": "/etc/docker/certs.d/<votre_registre>/key.crt"
+   }
+   ```
+
+   c. Enregistrez et fermez le fichier.
+
+3. Redémarrez Docker pour appliquer la configuration mise à jour :
+
+   Redémarrez le service Docker pour qu'il prenne en compte les modifications de la configuration.
+
+   ```bash
+   sudo systemctl restart docker
+   ```
+
+4. Réexécutez votre commande `docker pull` :
+
+   Vous devriez maintenant pouvoir exécuter `docker pull` sans rencontrer l'erreur "x509: certificate signed by unknown authority".
+
+Assurez-vous que le certificat SSL est correctement signé par une autorité de confiance et que les chemins spécifiés dans la configuration Docker (`tlscacert`, `tlscert`, `tlskey`) correspondent aux emplacements des fichiers du certificat sur le serveur distant.

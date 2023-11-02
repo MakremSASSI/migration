@@ -1,0 +1,79 @@
+Pour installer Checkmk sur Ubuntu 20.04 LTS, suivez ces étapes :
+
+1. Mettez à jour les paquets de votre système :
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+2. Installez les prérequis nécessaires :
+
+```bash
+sudo apt install python3 python3-pip apache2 libapache2-mod-proxy-html libapache2-mod-python libapache2-mod-proxy libapache2-mod-proxy-html libapache2-mod-proxy-http
+```
+
+3. Téléchargez Checkmk Raw Edition depuis le site officiel : https://checkmk.com/download.php
+
+Assurez-vous de sélectionner la version appropriée pour votre système. Vous pouvez utiliser la commande `wget` pour télécharger le fichier :
+
+```bash
+wget https://checkmk.com/support/2.0.0p19/check-mk-raw-2.0.0p19_0.bionic_amd64.deb
+```
+
+4. Installez Checkmk Raw Edition à l'aide de la commande `dpkg` :
+
+```bash
+sudo dpkg -i check-mk-raw-2.0.0p19_0.bionic_amd64.deb
+```
+
+Assurez-vous de remplacer le nom du fichier par le nom de la version que vous avez téléchargée.
+
+5. Installez les dépendances manquantes en exécutant la commande :
+
+```bash
+sudo apt -f install
+```
+
+6. Configurez Checkmk en utilisant la commande `omd` :
+
+```bash
+sudo omd create monsite
+```
+
+Remplacez "monsite" par le nom de votre site.
+
+7. Activez le site que vous venez de créer :
+
+```bash
+sudo omd start monsite
+```
+
+8. Configurez Apache comme proxy pour le serveur Checkmk en créant un fichier de configuration dans `/etc/apache2/conf-available/`. Vous pouvez créer un fichier `checkmk_proxy.conf` avec le contenu suivant :
+
+```apache
+ProxyPass /monsite http://localhost/monsite
+ProxyPassReverse /monsite http://localhost/monsite
+<Location /monsite>
+  Order allow,deny
+  Allow from all
+</Location>
+```
+
+Ensuite, activez ce fichier de configuration :
+
+```bash
+sudo a2enconf checkmk_proxy
+```
+
+9. Redémarrez Apache pour appliquer les changements de configuration :
+
+```bash
+sudo systemctl restart apache2
+```
+
+10. Accédez à l'interface web de Checkmk en utilisant votre navigateur en entrant l'adresse suivante : http://votre_ip_du_serveur/monsite
+
+11. Connectez-vous à l'interface en utilisant les identifiants par défaut (nom d'utilisateur : `cmkadmin`, mot de passe : `omd`).
+
+C'est tout ! Vous avez maintenant installé Checkmk sur Ubuntu 20.04 LTS et configuré un site de surveillance. Vous pouvez personnaliser votre configuration, ajouter des hôtes à surveiller et configurer des règles spécifiques selon vos besoins.

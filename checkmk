@@ -1,0 +1,64 @@
+To install Checkmk using Docker Compose, you'll need Docker and Docker Compose installed on your system. Here are the steps to set up Checkmk using Docker Compose:
+
+1. Install Docker and Docker Compose:
+   If you haven't already installed Docker and Docker Compose, follow these steps:
+
+   a. Install Docker:
+   ```bash
+   sudo apt update
+   sudo apt install -y docker.io
+   ```
+
+   b. Install Docker Compose:
+   ```bash
+   sudo apt install -y docker-compose
+   ```
+
+2. Create a directory to store your Checkmk configuration and data:
+
+   ```bash
+   mkdir ~/checkmk
+   cd ~/checkmk
+   ```
+
+3. Create a Docker Compose YAML file (e.g., `docker-compose.yml`) to define the Checkmk service. You can use a text editor to create and edit the file:
+
+   ```yaml
+   version: '3'
+   services:
+     checkmk:
+       image: checkmk/check-mk-raw:latest
+       environment:
+         - CMK_SITE_ID=mysite
+       ports:
+         - "5000:5000"
+       volumes:
+         - ./data:/omd/sites/mysite
+       restart: unless-stopped
+   ```
+
+   This Compose file uses the `checkmk/check-mk-raw` Docker image, sets your Checkmk site ID as "mysite," maps port 5000 to the container, and creates a volume for your data.
+
+4. Start the Checkmk service using Docker Compose:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+   This command will download the Checkmk Docker image if it's not already available and start the Checkmk service in the background.
+
+5. Access the Checkmk web interface by opening a web browser and visiting `http://localhost:5000`. If you're running Docker on a remote server, replace `localhost` with the server's IP or domain name.
+
+6. Log in to the Checkmk web interface using the default credentials:
+   - Username: `cmkadmin`
+   - Password: `omd`
+
+   After logging in, you can configure Checkmk, add hosts to monitor, and set up monitoring rules according to your needs.
+
+7. To stop and remove the Checkmk container when you're done, use the following command in the same directory as your `docker-compose.yml` file:
+
+   ```bash
+   docker-compose down
+   ```
+
+This setup uses Docker Compose to run a Checkmk container with the necessary configuration. You can customize the `docker-compose.yml` file to meet your specific requirements, such as changing the site ID, ports, or other environment variables.

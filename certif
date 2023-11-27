@@ -2,3 +2,96 @@ sudo vi /etc/ssl/openssl.cnf
 https://github.com/rchidana/Docker-Private-Registry/
 
 https://www.youtube.com/watch?v=Mii7oaoMzg4
+
+
+Il semble que le problème réside dans la validation du certificat SSL lors de l'utilisation de Docker version 17 depuis votre client. L'erreur "certificat signé par une autorité inconnue X.509" indique que Docker ne peut pas valider le certificat SSL car l'autorité de certification (CA) n'est pas reconnue.
+
+Voici quelques étapes supplémentaires que vous pouvez suivre pour résoudre ce problème spécifique :
+
+1. **Certificats Racines :**
+   Assurez-vous que le certificat SSL que vous avez ajouté sur le serveur Ubuntu 18.04 est signé par une autorité de certification (CA) reconnue. Docker utilise les certificats racines du système pour valider les certificats SSL.
+
+2. **Copie des Certificats Racines :**
+   Comme le client Docker version 17 ne semble pas reconnaître l'autorité de certification du nouveau certificat, vous pouvez copier les certificats racines du système où Docker version 20 fonctionne correctement vers le système avec Docker version 17. Les certificats racines se trouvent généralement dans le répertoire `/etc/ssl/certs/`.
+
+   ```bash
+   sudo cp /etc/ssl/certs/* /path/to/docker17/certificates/
+   ```
+
+   Assurez-vous de remplacer "/path/to/docker17/certificates/" par le chemin approprié sur votre système.
+
+3. **Configuration du Client Docker 17 :**
+   Si vous avez un fichier de configuration pour Docker sur le client version 17, assurez-vous qu'il est correctement configuré pour utiliser les certificats et les chemins appropriés.
+
+4. **Mise à Jour de Docker (si possible) :**
+   Comme mentionné précédemment, Docker version 17 est assez ancienne. Si possible, envisagez de mettre à jour Docker sur le client vers une version plus récente, car cela pourrait inclure des correctifs pour les problèmes liés à la gestion des certificats.
+
+5. **Test de Connexion :**
+   Après avoir effectué ces ajustements, essayez à nouveau de faire un pull depuis le client Docker version 17 pour voir si le problème persiste.
+
+N'oubliez pas de redémarrer Docker après avoir effectué des changements de configuration.
+
+Si le problème persiste, il peut être utile de consulter les journaux Docker sur le client version 17 pour obtenir des informations plus détaillées sur les erreurs.
+
+```bash
+docker logs <container_name_or_id>
+```
+
+Assurez-vous également de consulter la documentation Docker pour votre version spécifique, ainsi que les forums de la communauté Docker, pour des solutions adaptées à votre environnement.
+
+
+
+
+Si votre certificat SSL pour le serveur Docker Registry sur Ubuntu 18.04 a expiré et que vous avez un nouveau certificat, voici comment vous pouvez le remplacer :
+
+1. **Accéder au Répertoire du Docker Registry :**
+   Accédez au répertoire où Docker Registry est configuré sur votre serveur. Par défaut, le fichier de configuration est souvent situé à `/etc/docker/registry/config.yml`.
+
+2. **Remplacer les Fichiers de Certificats :**
+   Remplacez les anciens fichiers de certificats expirés par les nouveaux. Assurez-vous d'avoir les fichiers suivants :
+   - Nouveau certificat SSL (`new_certificate.crt`)
+   - Clé privée correspondante (`new_private_key.key`)
+   - Fichier de chaîne de certificats (si applicable)
+
+   Assurez-vous que les fichiers de certificats ont les bonnes autorisations.
+
+3. **Mettre à Jour la Configuration :**
+   Modifiez le fichier de configuration de Docker Registry (`config.yml`) pour refléter les nouveaux chemins des fichiers de certificats. Voici un exemple de configuration mise à jour :
+
+   ```yaml
+   version: 0.1
+   log:
+     fields:
+       service: registry
+   storage:
+     filesystem:
+       rootdirectory: /var/lib/registry
+   http:
+     addr: :5000
+     tls:
+       certificate: /path/to/new_certificate.crt
+       key: /path/to/new_private_key.key
+       clientcas: /path/to/new_ca.crt
+   ```
+
+   Assurez-vous de remplacer `/path/to/` par le chemin réel vers les nouveaux fichiers de certificats dans votre système.
+
+4. **Redémarrer Docker Registry :**
+   Après avoir modifié la configuration, redémarrez Docker Registry pour appliquer les modifications.
+
+   ```bash
+   sudo systemctl restart docker
+   ```
+
+5. **Vérification :**
+   Vérifiez que Docker Registry utilise les nouveaux certificats en accédant à l'URL du registre via HTTPS. Vous pouvez utiliser la commande `curl` pour cela.
+
+   ```bash
+   curl -k https://registry.example.com/v2/
+   ```
+
+   Assurez-vous de remplacer `registry.example.com` par le nom de domaine réel de votre registre.
+
+Assurez-vous également que tous les clients Docker qui se connectent à ce registre ont les nouveaux certificats racines installés si le certificat CA a également changé.
+
+Ces étapes devraient vous permettre de remplacer un certificat SSL expiré pour votre Docker Registry sur Ubuntu 18.04.
